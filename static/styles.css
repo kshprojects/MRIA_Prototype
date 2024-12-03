@@ -1,0 +1,82 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Body Styling */
+body {
+    background: linear-gradient(to bottom, #2d98da, #00a8ff);
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+}
+
+/* Container */
+.container {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 700px;
+}
+
+/* Heading */
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+/* Button Styling */
+.btn {
+    display: inline-block;
+    background-color: #4cd137;
+    color: #fff;
+    font-size: 1rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 0.75rem 1.5rem;
+    margin: 0.5rem;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.btn:hover {
+    background-color: #44bd32;
+    transform: scale(1.05);
+}
+
+/* Secondary Button */
+.btn-secondary {
+    background-color: #0097e6;
+}
+
+.btn-secondary:hover {
+    background-color: #0082c9;
+}
+
+/* Footer */
+footer {
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    color: #dcdde1;
+}
+
+footer a {
+    color: #f5f6fa;
+    text-decoration: underline;
+}

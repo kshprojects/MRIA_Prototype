@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+    <link rel="stylesheet" href="/static/main1-styles.css">
+</head>
+<body>
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+        <!-- Conversations Container (Left Side) -->
+        <div class="conversations-container">
+            <h2>Conversations</h2>
+            <div id="conversationList">
+                <!-- List of user's conversations will appear here -->
+            </div>
+        </div>
+
+        <!-- Welcome Container (Centered) -->
+        <div class="welcome-container">
+            <h1>Welcome to the Main Page</h1>
+            <button id="createConversationBtn">Create a Conversation</button>
+        </div>
+
+        <!-- File Upload Container -->
+        <div class="file-upload-container">
+            <h2>Upload a PDF</h2>
+            <form id="uploadForm" enctype="multipart/form-data">
+                <input type="file" id="fileInput" name="file" accept="application/pdf" required>
+                <!-- Automatically use userId as collection name -->
+                <input type="hidden" id="userCollection" name="user_collection">
+                <button type="submit">Upload</button>
+            </form>
+            <div id="uploadStatus"></div>
+        </div>
+    </div>
+
+    <footer>
+        <a href="/">Home</a>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const userId = localStorage.getItem('userId');
+
+            // Ensure the user is logged in
+            if (!userId) {
+                alert('User not logged in. Redirecting to login page.');
+                window.location.href = '/login';
+                return;
+            }
+
+            // Set the userCollection to userId
+            //document.getElementById('userCollection').value = userId;
+
+            // Fetch previous conversations for the user
+            fetch(`/app/api/conversations/user/${userId}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Failed to fetch conversations.');
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.status === 'success') {
+                        const conversationList = document.getElementById('conversationList');
+                        if (data.conversations.length === 0) {
+                            conversationList.innerHTML = '<p>No conversations available. Create one to start.</p>';
+                        }
+                        data.conversations.forEach(conversation => {
+                            displayConversation(conversation.conversation_id);
+                        });
+                    } else {
+                        alert('Error fetching conversations.');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+
+            // Handle creating a new conversation
+            document.getElementById('createConversationBtn').addEventListener('click', () => {
+                fetch(`/app/api/create_conversation/${userId}`, {
+                    method: 'POST',
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            // Redirect to the newly created conversation page
+                            window.location.href = `/conversation?conversation_id=${data.conversation_id}`;
+                        } else {
+                            alert('Failed to create conversation');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+
+            uploadForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+
+            const fileInput = document.getElementById('fileInput').files[0];
+            const userCollection = "Collection" + userId;
+
+            if (!fileInput || !userCollection) {
+                uploadStatus.textContent = "File and User Collection are required!";
+                uploadStatus.style.color = "red";
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput);
+            formData.append('user_collection', userCollection);
+
+            // Upload the file and trigger processing in one API call
+            fetch('/app/api/mria/upload_and_process', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    uploadStatus.textContent = "Upload and processing successful!";
+                    uploadStatus.style.color = "green";
+                    console.log('Processing complete:', data); // Log or handle the data as needed
+                } else {
+                    uploadStatus.textContent = "Error during processing: " + data.message;
+                    uploadStatus.style.color = "red";
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                uploadStatus.textContent = "An error occurred.";
+                uploadStatus.style.color = "red";
+            });
+        });
+
+
+            // Function to display conversation ID as clickable links
+            function displayConversation(conversationId) {
+                const conversationElement = document.createElement('div');
+                conversationElement.innerHTML = `
+                    <h3><a href="/conversation?conversation_id=${conversationId}">Conversation ID: ${conversationId}</a></h3>
+                `;
+                document.getElementById('conversationList').appendChild(conversationElement);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+*.log
+config/.env
+credentials.json
+firebase_venv/
+ai_venv/
+temp_audio.wav
+uploads/
+

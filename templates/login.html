@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='login-styles.css') }}">
+</head>
+<body>
+    <div class="login-container">
+        <h1>Login</h1>
+        <p>Access your healthcare assistant</p>
+        <form id="loginForm" class="login-form">
+            <label for="loginIdentifier">Email or Phone</label>
+            <input type="text" id="loginIdentifier" placeholder="Enter email or phone" required>
+            
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" placeholder="Enter password" required>
+            
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+        <footer>
+            <a href="/">← Back to Home</a>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', (event) => {
+            event.preventDefault(); // Prevent default form submission
+            
+            const identifier = document.getElementById('loginIdentifier').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+    
+            if (!identifier || !password) {
+                alert('Please fill out both fields.');
+                return;
+            }
+
+            fetch('/app/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ identifier, password }),
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Invalid login credentials.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.user_id) {
+                        const userId = data.user_id; // Capture user_id
+                        localStorage.setItem('userId', userId); // Store in localStorage for persistence
+                        alert(`Login successful! User ID: ${userId}`);
+                        // Redirect to the main page
+                        window.location.href = '/main1';
+                    } else {
+                        alert('Invalid login credentials.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred during login. Please try again.');
+                });
+        });
+    </script>
+</body>
+</html>

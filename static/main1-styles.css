@@ -1,0 +1,231 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Body Styling */
+body {
+    background: linear-gradient(to right, #4facfe, #09c2cc); /* Blue gradient */
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Align content to the center */
+    height: 100vh;
+    padding: 0;
+    overflow: hidden; /* Prevent vertical scrolling */
+}
+
+/* Main Wrapper */
+.main-wrapper {
+    display: flex;
+    flex-direction: row; /* Keep the row structure */
+    width: 100%;
+    max-width: 1350px;
+    justify-content: space-between; /* Space out the items in the container */
+    margin: 0 auto; /* Center the main wrapper horizontally */
+    gap: 10px; /* Maintain spacing between the elements */
+    height: 100%;
+    align-items: flex-start; /* Align to the top */
+}
+
+/* Conversations Container (Left Side) */
+.conversations-container {
+    background-color: rgba(0, 0, 0, 0.2); /* Slight transparency */
+    border-radius: 25px;
+    padding: 10px;
+    width: 300px;
+    text-align: center;
+    height: 90%; 
+    margin-top: 3%;
+    margin-right: 5%;
+    flex-shrink: 0; /* Prevent shrinking */
+    align-self: stretch; /* Ensure it stretches to fill height */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Add a slight shadow for visual separation */
+}
+
+/* Heading inside the conversations container */
+.conversations-container h2 {
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+    color: #e1f5fe;
+}
+
+#conversationList {
+    font-size: 1rem;
+    color: #ffffff;
+    margin-top: 1rem;
+}
+
+#conversationList div {
+    margin-bottom: 1rem;
+}
+
+#conversationList a {
+    color: #0fc9e2;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#conversationList a:hover {
+    text-decoration: underline;
+}
+
+/* Welcome Container (Centered) */
+.welcome-container {
+    background-color: rgba(255, 255, 255, 0.2); /* Slight transparency */
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    flex: 1; /* Take remaining space in the row */
+    max-width: 800px; /* Keep the width constrained */
+    height: auto;
+    margin: 35px auto 0 auto; /* Adds a 20px gap above */
+    align-self: flex-start; /* Align to the top along the flex column */
+}
+
+/* File Upload Container */
+.file-upload-container {
+    background-color: rgba(255, 255, 255, 0.2); /* Slight transparency */
+    border-radius: 20px;
+    padding: 20px;
+    width: 300px; /* Consistent width with the conversations container */
+    text-align: center;
+    height: auto;
+    margin-top: 3%; /* Adds spacing above the container */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Light shadow for separation */
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+.file-upload-container h2 {
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+    color: #e1f5fe;
+}
+
+#uploadForm {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Add space between inputs and button */
+}
+
+#fileInput,
+#userCollection {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #ffffff;
+    color: #333;
+}
+
+#fileInput {
+    background-color: #f7f7f7; /* Light gray background for file input */
+}
+
+button[type="submit"] {
+    background-color: #007bb5;
+    color: white;
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%; /* Full width for button */
+}
+
+button[type="submit"]:hover {
+    background-color: #005f87;
+}
+
+/* Upload Status Message */
+#uploadStatus {
+    margin-top: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+/* Heading Styles */
+h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+/* Buttons */
+button {
+    background-color: #007bb5;
+    color: white;
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #005f87;
+}
+
+/* Footer */
+footer {
+    margin-top: auto; /* Push the footer to the bottom */
+    text-align: center;
+    font-size: 1rem;
+    width: 100%;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.2); /* Slight transparency for footer */
+    border-radius: 15px;
+}
+
+footer a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-wrapper {
+        flex-direction: column; /* Stack containers vertically */
+        align-items: center; /* Center-align items */
+        gap: 10px;
+    }
+
+    .conversations-container {
+        width: 100%; /* Full width on small screens */
+        max-width: 300px; /* Add max-width for better scaling */
+        height: auto; /* Allow height to adjust dynamically */
+    }
+
+    .welcome-container {
+        width: 100%;
+        max-width: 600px; /* Adjust max width for smaller screens */
+        margin-top: 20px;
+    }
+}
+
+/* New Button Styles (Create RAG Conversation) */
+#welcome-container button#createRagConversationBtn {
+    margin-top: 10px; /* Add some space between buttons */
+    background-color: #007bb5; /* Same style as other button */
+    color: white;
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%; /* Full width for button */
+}
+
+#welcome-container button#createRagConversationBtn:hover {
+    background-color: #005f87;
+}

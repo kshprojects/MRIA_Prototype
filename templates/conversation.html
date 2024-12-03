@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversation</title>
+    <link rel="stylesheet" href="/static/conversation-styles.css">
+</head>
+<body>
+    <div id="conversation-container">
+        <h1>MRIA Medical Assistant</h1>
+
+        <!-- Form for submitting a new query -->
+        <form id="new-query-form">
+            <input 
+                type="text" 
+                id="new-query" 
+                placeholder="Ask your question..." 
+                aria-label="Type your query here">
+            <button type="submit" class="button" aria-label="Submit query">Submit</button>
+            <button type="speak" id="speak-button" class="button speak-button" aria-label="Use voice input">Speak</button>
+        </form>
+
+        <!-- Recording Status -->
+        <div id="recording-status" style="display: none;">
+            <p>Recording... Please speak now.</p>
+        </div>
+
+        <!-- Loading Prompt -->
+        <div id="loading-prompt" style="display: none; margin-top: 20px;">
+            <p>Your query is being processed...</p>
+        </div>
+
+        <!-- Queries Section -->
+        <section id="queries" aria-label="Query and response history"></section>
+
+        <!-- Footer -->
+        <footer>
+            <a href="/main1" aria-label="Return to main menu">Back</a>
+        </footer>
+    </div>
+
+    <script>
+        // Extract conversation ID from URL
+        const params = new URLSearchParams(window.location.search);
+        const conversationId = params.get('conversation_id');
+
+        // Fetch queries for the conversation
+        function fetchQueries() {
+            fetch(`/app/api/conversations/retrieve/${conversationId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const queriesDiv = document.getElementById('queries');
+                    queriesDiv.innerHTML = ""; // Clear existing content
+
+                    if (data.error) {
+                        queriesDiv.innerHTML = `<p>Error fetching queries: ${data.error}</p>`;
+                    } else {
+                        data.queries.reverse().forEach(query => {
+                            const queryContainer = document.createElement('div');
+                            queryContainer.classList.add('query-item');
+
+                            // Query text
+                            const queryPara = document.createElement('p');
+                            queryPara.classList.add('query-text');
+                            queryPara.textContent = `${query.query_text} (Asked: ${new Date(query.created_at).toLocaleString()})`;
+                            queryContainer.appendChild(queryPara);
+
+                            // Response text, if available
+                            if (query.response && query.response.response_text) {
+                                const responsePara = document.createElement('p');
+                                responsePara.classList.add('response-text');
+                                responsePara.textContent = `${query.response.response_text}`;
+                                queryContainer.appendChild(responsePara);
+                            }
+
+                            queriesDiv.appendChild(queryContainer);
+                        });
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('queries').innerHTML = `<p>Error: ${error.message}</p>`;
+                });
+        }
+
+        // Initial fetch
+        fetchQueries();
+
+        // Submit a new query
+        document.getElementById('new-query-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const queryText = document.getElementById('new-query').value;
+
+            // Show loading prompt
+            const loadingPrompt = document.getElementById('loading-prompt');
+            loadingPrompt.style.display = 'block';
+
+            fetch(`/app/api/conversations/${conversationId}/add_query_response`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query: queryText }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert('Error: ' + data.error);
+                    } else {
+                        fetchQueries(); // Refresh queries
+                        document.getElementById('new-query').value = ""; // Clear input
+                    }
+                })
+                .catch(error => alert('Error submitting query: ' + error.message))
+                .finally(() => {
+                    // Hide loading prompt after the process
+                    loadingPrompt.style.display = 'none';
+                });
+        });
+
+        // Use voice input
+        document.getElementById('speak-button').addEventListener('click', function () {
+            // Show the recording message
+            const recordingStatus = document.getElementById('recording-status');
+            recordingStatus.style.display = 'block';
+
+            fetch('/app/api/conversations/transcribe_audio', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    // Hide the recording message once transcription is complete
+                    recordingStatus.style.display = 'none';
+
+                    if (data.error) {
+                        alert('Error: ' + data.error);
+                    } else {
+                        // Show loading prompt
+                        const loadingPrompt = document.getElementById('loading-prompt');
+                        loadingPrompt.style.display = 'block';
+
+                        // Submit the transcribed text as a query
+                        fetch(`/app/api/conversations/${conversationId}/add_query_response`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ query: data.transcription }),
+                        })
+                            .then(submitResponse => submitResponse.json())
+                            .then(submitData => {
+                                if (submitData.error) {
+                                    alert('Error adding query: ' + submitData.error);
+                                } else {
+                                    fetchQueries(); // Refresh queries
+                                }
+                            })
+                            .catch(error => alert('Error submitting transcribed query: ' + error.message))
+                            .finally(() => {
+                                // Hide loading prompt
+                                loadingPrompt.style.display = 'none';
+                            });
+                    }
+                })
+                .catch(error => {
+                    // Hide the recording message if there's an error
+                    recordingStatus.style.display = 'none';
+                    alert('Error transcribing speech: ' + error.message);
+                });
+        });
+    </script>
+</body>
+</html>

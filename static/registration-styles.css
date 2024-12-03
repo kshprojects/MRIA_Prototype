@@ -1,0 +1,94 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Body Styling */
+body {
+    background: linear-gradient(to right, #00c6ff, #0072ff); /* Professional blue gradient */
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+}
+
+/* Container */
+.register-container {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 2.5rem;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 500px;
+}
+
+/* Heading */
+h1 {
+    font-size: 2.4rem;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+}
+
+/* Form Styling */
+.register-form label {
+    display: block;
+    text-align: left;
+    margin: 0.5rem 0 0.3rem;
+    font-size: 0.9rem;
+    color: #e1f5fe;
+}
+
+.register-form input {
+    width: 100%;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 8px;
+    margin-bottom: 1.2rem;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.register-form input:focus {
+    border: 2px solid #005f87; /* Blue border */
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Button Styling */
+.register-btn {
+    background-color: #005f87; /* Blue button */
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 0.8rem;
+    width: 100%;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.register-btn:hover {
+    background-color: #003f5c; /* Darker blue on hover */
+    transform: scale(1.05);
+}
+
+/* Footer */
+footer {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+}
+
+footer a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
